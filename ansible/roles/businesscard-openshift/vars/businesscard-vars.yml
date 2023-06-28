@@ -1,0 +1,62 @@
+keybase_secrets: >-
+  {{       _keybase_secrets_prod    if inventory_environment == "prod"
+      else _keybase_secrets_preprod if inventory_environment == "test"
+      else None }}
+_keybase_secrets_prod: >-
+    {{ lookup('file', '/keybase/team/epfl_bsnscrd/secrets-prod.yml') | from_yaml }}
+_keybase_secrets_preprod: >-
+    {{ lookup('file', '/keybase/team/epfl_bsnscrd/secrets-test.yml') | from_yaml }}
+
+keybase_businesscard_service_mail_account: >-
+    {{ lookup('file', '/keybase/team/epfl_bsnscrd/service.yml') | from_yaml }}
+
+businesscard_hostname: >-
+  {{ "businesscard.epfl.ch" if inventory_environment == "prod"
+      else "businesscard-preprod.epfl.ch" if inventory_environment == "test"
+      else "localhost" }}
+
+businesscard_routes: >-
+  {{ ["businesscard.epfl.ch", "businesscard.128.178.222.83.nip.io"] if inventory_environment == "prod"
+      else ["businesscard-preprod.epfl.ch", "test-businesscard.128.178.222.83.nip.io", "businesscard-test.epfl.ch"] if inventory_environment == "test"
+      else "localhost" }}
+
+businesscard_base_image_pull_secret_name: github-package-common-web-token
+
+businesscard_git_repository: https://github.com/epfl-si/businesscard.git
+# Note that the `master` branch contains a Dockerfile, but we don't
+# want to use it (until this one is merged):
+businesscard_git_branch: master
+
+businesscard_vhost_dir: app
+
+# Note: we only build in test...
+businesscard_build_openshift_namespace: "businesscard-test"
+
+tequila_hostname: >-
+  {{ "tequila.epfl.ch" if inventory_environment == "prod"
+      else "test-tequila.epfl.ch" if inventory_environment == "test"
+      else "localhost" }}
+tequila_environment: >-
+  {{ "prod" if inventory_environment == "prod"
+      else "test" if inventory_environment == "test" }}
+
+businesscard_image_name: businesscard
+businesscard_image_tag: >-
+    {{ "prod" if inventory_environment == "prod" else "preprod" }}
+
+# Sends mail without processing order. Leave it empty if you don't need it.
+fake_mail_export: >-
+  {{ "" if inventory_environment == "prod"
+      else "" }}
+fake_month: >-
+  {{ "" if inventory_environment == "prod"
+      else "" }}
+cron_schedule: >-
+  {{ "1 5 1 * *" if inventory_environment == "prod"
+     else "" }}
+mail_repro: >- 
+  {{ keybase_secrets.mails.repro }}
+
+# List of SF mail adresses, separed by quotes
+mail_SF: >-
+  {{ keybase_secrets.mails.sf }}

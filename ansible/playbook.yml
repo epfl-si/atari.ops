@@ -1,0 +1,5 @@
+- name: Deploy businesscard on OpenShift
+  hosts: all
+  gather_facts: no
+  roles:
+    - role: roles/businesscard-openshift
