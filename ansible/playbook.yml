@@ -1,5 +1,5 @@
-- name: Deploy businesscard on OpenShift
+- name: Deploy atari on vm
   hosts: all
   gather_facts: no
   roles:
-    - role: roles/businesscard-openshift
+    - role: roles/atari-vm

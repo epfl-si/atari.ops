@@ -1,0 +1,6 @@
+- include_tasks:
+    file: docker.yml
+    apply:
+      tags:
+        - atari.docker
+  tags: always

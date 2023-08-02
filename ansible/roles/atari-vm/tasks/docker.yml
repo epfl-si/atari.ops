@@ -1,0 +1,25 @@
+---
+- name: Ensure that atari repository is present
+  git:
+    repo: 'https://github.com/epfl-si/atari'
+    dest: /srv/atari
+    version: "master"
+    force: yes
+
+- name: Copy secrets from keybase
+  copy:
+    src: /keybase/team/epfl_atari/settings-dev.json
+    dest: /srv/atari/settings.json
+
+- name: Start docker container atari (it might take a while)
+  docker_compose:
+    project_src: /srv/atari
+    state: present
+    build: yes
+    recreate: always
+    nocache: no
+    pull: yes
+    files:
+      - docker-compose.yml
+  vars:
+      ansible_python_interpreter: /bin/python3

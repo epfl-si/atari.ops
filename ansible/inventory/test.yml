@@ -1,7 +1,3 @@
 all:
   hosts:
-    openshift-test:
-      openshift_namespace: atari-test
-      ansible_connection: local
-      ansible_python_interpreter: "{{ busible_dir }}/ansible-deps-cache/bin/python3"
-      inventory_environment: test
+    itsidevfsd0024:
