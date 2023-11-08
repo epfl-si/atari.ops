@@ -2,24 +2,15 @@
 #
 # This is a wrapper around ansible / ansible-playbook.
 #
-# Usage ("ansible" mode):
-#
-#   ansible/botsible -m raw all_wordpresses -a 'echo {{ wp_dir }}'
-#
 # Usage ("ansible-playbook" mode):
 #
-#   ansible/botsible -l charte-wp-dcsl
-#
+#   ./ansible/atarisible [--prod]
 #
 # If you are unfamiliar with Ansible, read up on it at
 # - https://www.ansible.com/overview/how-ansible-works
 # - https://github.com/jdauphant/awesome-ansible
 
 cd "$(dirname "$0")"; cd "$(/bin/pwd)"
-
-# One can override these on the command line
-playbook_flags=""
-ansible_flags=""
 
 git_current_branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null)"
 case "$git_current_branch" in
@@ -56,25 +47,22 @@ platform_check () {
 
 inventory_mode="test"
 inventories () {
-    echo "-i inventory/hosts.yml"
-    # case "$inventory_mode" in
-    #     test) echo "-i inventory/test" ;;
-    #     test_and_prod) echo "-i inventory/test -i inventory/prod" ;;
-    # esac
+    case "$inventory_mode" in
+        *test*) echo "-i inventory/test.yml" ;;
+    esac
+    case "$inventory_mode" in
+        *prod*) echo "-i    /prod.yml" ;;
+    esac
 }
 
 ###########################################################################
 
 mode=ansible-playbook
 
-declare -a ansible_args
 while [ "$#" -gt 0 ]; do
-  case "$1" in
+    case "$1" in
         --prod)
             inventory_mode="$inventory_mode prod"
-            shift ;;
-        --wp-veritas)
-            # Ignored for backward compatibility
             shift ;;
         -m) mode=ansible
             ansible_args+=("-m")
@@ -95,8 +83,8 @@ set -e
 platform_check
 case "$mode" in
     ansible-playbook)
-        ansible-playbook -vvv $playbook_flags $(inventories) "${ansible_args[@]}" \
-                         -e "annsible_cwd=$OLDPWD" \
+        ansible-playbook $playbook_flags  $(inventories) "${ansible_args[@]}" \
+                         $ansible_flags \
                          playbook.yml
         ;;
     ansible)

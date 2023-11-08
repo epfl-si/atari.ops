@@ -8,10 +8,37 @@
 
 - name: Copy secrets from keybase
   copy:
-    src: /keybase/team/epfl_atari/settings-dev.json
+    src: /keybase/team/epfl_atari/settings-test.json
     dest: /srv/atari/settings.json
 
-- name: Start docker container atari (it might take a while)
+- name: Ensure Traefik repository exists
+  file:
+    state: directory
+    path: "{{ item }}"
+    mode: '0755'
+  with_items:
+   - /srv/traefik/ssl/
+   - /srv/traefik/config/
+
+- name: Copy Traefik certificates from keybase
+  copy:
+    src: "{{ item }}"
+    dest: /srv/traefik/ssl/
+  with_items:
+    - /keybase/team/epfl_atari/ssl/atari-test-public-key.crt
+    - /keybase/team/epfl_atari/ssl/atari-test-private-key.key
+
+- name: Template static Traefik configuration
+  template:
+    src: traefik-static.yml
+    dest: /srv/traefik/traefik.yml
+
+- name: Template dynamic Traefik configuration
+  template:
+    src: traefik-dynamic.yml
+    dest: /srv/traefik/config/
+
+- name: Start ATARI containers (it might take a while)
   docker_compose:
     project_src: /srv/atari
     state: present
@@ -20,6 +47,6 @@
     nocache: no
     pull: yes
     files:
-      - docker-compose.yml
+      - docker-compose-test.yml
   vars:
       ansible_python_interpreter: /bin/python3
