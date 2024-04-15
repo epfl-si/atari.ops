@@ -1,30 +1,30 @@
-# businesscard.ops
+# atari.ops
 
 This repositry regroups the configuration-as-code to provision, configure,
-deploy and manage the EPFL's businesscard app. It uses [Ansible] wrapped in a
-convenient [suitcase], called [`busible`](./busible).
+deploy and manage the EPFL's atari app. It uses [Ansible] wrapped in a
+convenient [suitcase], called [`atarisible`](./atarisible).
 
 
 ## TL;DR
 
-`./busible`
+`./atarisible`
 
-1. Uses the [common-web] to build the businesscard image, checkouting the code from [github].
+1. Uses the [common-web] to build the atari image, checkouting the code from [github].
 1. Adds some secrets and config map, create a service, routes and a deployment config.
 1. If needed or asked, it will redeploy the pod.
 
 Detailled operations might look like:
 ```
-./busible -vvv -t businesscard.is,businesscard.build
-$ oc logs -f bc/businesscard --version=NN -n businesscard-test
-./busible -vvv -t businesscard.promote --prod
-./busible -vvv -t businesscard.secrets,businesscard.routes,businesscard.service,businesscard.cm,businesscard.dc --prod
+./atarisible -vvv -t atari.is,atari.build
+$ oc logs -f bc/atari --version=NN -n atari-test
+./atarisible -vvv -t atari.promote --prod
+./atarisible -vvv -t atari.secrets,atari.routes,atari.service,atari.cm,atari.dc --prod
 ```
 
 ## Prerequisites
 
-* Access to our [Keybase] `/keybase/team/epfl_businesscard/` directory.
-* Access to `businesscard-test` & `businesscard-prod` namespaces on our [OpenShift] cluster.
+* Access to our [Keybase] `/keybase/team/epfl_atari/` directory.
+* Access to `atari-test` & `atari-prod` namespaces on our [OpenShift] cluster.
 
 
 ## Tags
@@ -32,21 +32,21 @@ $ oc logs -f bc/businesscard --version=NN -n businesscard-test
 
 | name                             | tags                                                                          |
 |:---------------------------------|:------------------------------------------------------------------------      |
-|Secrets                           | `businesscard.dbs`<br>`businesscard.secrets`                                  |
-|Service                           | `businesscard.service`                                                        |
-|Routes                            | `businesscard.routes`                                                         |
-|Config Map                        | `businesscard.config`<br>`businesscard.cm`                                    |
-|Deployment Config                 | `businesscard.dc`<br>`businesscard.deploy`<br>`businesscard.deploymentconfig` |
-|Redeploy                          | `businesscard.deploy.force`                                                   |
-|Build image                       | `businesscard.is`<br>`businesscard.image`<br>`businesscard.imagestream`       |
-|Rebuild now                       | `businesscard.build`                                                          |
-|Promote                           | `businesscard.promote`                                                        |
+|Secrets                           | `atari.dbs`<br>`atari.secrets`                                  |
+|Service                           | `atari.service`                                                        |
+|Routes                            | `atari.routes`                                                         |
+|Config Map                        | `atari.config`<br>`atari.cm`                                    |
+|Deployment Config                 | `atari.dc`<br>`atari.deploy`<br>`atari.deploymentconfig` |
+|Redeploy                          | `atari.deploy.force`                                                   |
+|Build image                       | `atari.is`<br>`atari.image`<br>`atari.imagestream`       |
+|Rebuild now                       | `atari.build`                                                          |
+|Promote                           | `atari.promote`                                                        |
 
 
 
 [Ansible]: https://www.ansible.com (Ansible is Simple IT Automation)
 [suitcase]: https://github.com/epfl-si/ansible.suitcase (Install Ansible and its dependency stack into a temporary directory)
-[github]: https://github.com/epfl-si/businesscard
+[github]: https://github.com/epfl-si/atari
 [Keybase]: https://keybase.io
 [OpenShift]: https://openshift.com
 [common-web]: https://github.com/epfl-si/common-web
