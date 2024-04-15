@@ -1,0 +1,2 @@
+atari_host: "{{ 'itsidevfsd0031.xaas.epfl.ch' if 'prod' in inventory_file else 'itsidevfsd0024.xaas.epfl.ch' }}"
+atari_host_subdomain: "{{ 'atari.epfl.ch' if 'prod' in inventory_file else 'atari-test.epfl.ch' }}"

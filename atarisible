@@ -51,7 +51,7 @@ inventories () {
         *test*) echo "-i inventory/test.yml" ;;
     esac
     case "$inventory_mode" in
-        *prod*) echo "-i    /prod.yml" ;;
+        *prod*) echo "-i inventory/prod.yml" ;;
     esac
 }
 
@@ -62,7 +62,7 @@ mode=ansible-playbook
 while [ "$#" -gt 0 ]; do
     case "$1" in
         --prod)
-            inventory_mode="$inventory_mode prod"
+            inventory_mode="prod"
             shift ;;
         -m) mode=ansible
             ansible_args+=("-m")

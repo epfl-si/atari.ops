@@ -1,15 +1,17 @@
 tls:
   certificates:
-    - certFile: /etc/traefik/ssl/atari-test-public-key.crt
-      keyFile: /etc/traefik/ssl/atari-test-private-key.key
+    - certFile: /etc/traefik/ssl/atari_epfl_ch.crt
+      keyFile: /etc/traefik/ssl/atari.key
+    - certFile: /etc/traefik/ssl/DigiCertCA.crt
+      keyFile: /etc/traefik/ssl/atari.key
 
 http:
   routers:
     dashboard:
-      rule: Host(`itsidevfsd0024.xaas.epfl.ch`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
+      rule: Host({{ atari_host }}) && (PathPrefix(/api)  PathPrefix(`/dashboard`))
       service: api@internal
     atari:
-      rule: "Host(`itsidevfsd0024.xaas.epfl.ch`) || Host(`atari-test.epfl.ch`)"
+      rule: "Host(`{{ atari_host }}`)  Host({{ atari_host_subdomain }})"
       tls: {}
       service: atari
       entrypoints:

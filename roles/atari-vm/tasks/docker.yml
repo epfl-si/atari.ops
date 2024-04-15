@@ -1,15 +1,44 @@
 ---
-- name: Ensure that atari repository is present
+- name: Install Docker
+  apt:
+    name: docker.io
+    state: latest
+    update_cache: true
+
+- name: Install Python Docker
+  apt:
+    name: python3-docker
+    state: latest
+    update_cache: true
+
+- name: Install pip
+  apt:
+    name: python3-pip
+    state: latest
+    update_cache: true
+
+- name: Install docker-compose python package
+  ansible.builtin.pip:
+    name: docker-compose
+
+- name: Ensure that ATARI Git repository is present and up to date
   git:
     repo: 'https://github.com/epfl-si/atari'
     dest: /srv/atari
     version: "master"
     force: yes
 
-- name: Copy secrets from keybase
+- name: Copy secrets from keybase (test)
   copy:
     src: /keybase/team/epfl_atari/settings-test.json
     dest: /srv/atari/settings.json
+  when: ( 'prod' not in inventory_file )
+
+- name: Copy secrets from keybase (prod)
+  copy:
+    src: /keybase/team/epfl_atari/settings-prod.json
+    dest: /srv/atari/settings.json
+  when: ( 'prod' in inventory_file )
 
 - name: Ensure Traefik repository exists
   file:
@@ -25,8 +54,9 @@
     src: "{{ item }}"
     dest: /srv/traefik/ssl/
   with_items:
-    - /keybase/team/epfl_atari/ssl/atari-test-public-key.crt
-    - /keybase/team/epfl_atari/ssl/atari-test-private-key.key
+    - /keybase/team/epfl_atari/ssl/atari_epfl_ch/atari_epfl_ch.crt
+    - /keybase/team/epfl_atari/ssl/atari_epfl_ch/atari.key
+    - /keybase/team/epfl_atari/ssl/atari_epfl_ch/DigiCertCA.crt
 
 - name: Template static Traefik configuration
   template:
