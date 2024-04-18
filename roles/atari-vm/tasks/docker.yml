@@ -28,17 +28,10 @@
     version: "master"
     force: yes
 
-- name: Copy secrets from keybase (test)
+- name: "Copy secrets from keybase ({{ inventory_mode }})"
   copy:
-    src: /keybase/team/epfl_atari/settings-test.json
+    src: "/keybase/team/epfl_atari/settings-{{ inventory_mode }}.json"
     dest: /srv/atari/settings.json
-  when: ( 'prod' not in inventory_file )
-
-- name: Copy secrets from keybase (prod)
-  copy:
-    src: /keybase/team/epfl_atari/settings-prod.json
-    dest: /srv/atari/settings.json
-  when: ( 'prod' in inventory_file )
 
 - name: Ensure Traefik repository exists
   file:
@@ -77,6 +70,6 @@
     nocache: no
     pull: yes
     files:
-      - docker-compose-test.yml
+      - "docker-compose.yml"
   vars:
-      ansible_python_interpreter: /bin/python3
+    ansible_python_interpreter: /bin/python3

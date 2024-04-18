@@ -48,10 +48,10 @@ platform_check () {
 inventory_mode="test"
 inventories () {
     case "$inventory_mode" in
-        *test*) echo "-i inventory/test.yml" ;;
+        *test*) echo "-i inventory/test.yml -e inventory_mode=test" ;;
     esac
     case "$inventory_mode" in
-        *prod*) echo "-i inventory/prod.yml" ;;
+        *prod*) echo "-i inventory/prod.yml -e inventory_mode=prod" ;;
     esac
 }
 
