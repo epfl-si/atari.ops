@@ -1,0 +1,32 @@
+---
+- name: "Avoid `no space left on device`"
+  community.docker.docker_prune:
+    containers: true
+    images: true
+    networks: true
+    volumes: true
+    builder_cache: true
+  tags:
+    - atari.chore
+    - chore
+    - docker-prune
+
+- name: "Truncate all the docker's containers logs"
+  ansible.builtin.shell: 
+    cmd: truncate -s 0 /var/lib/docker/containers/**/*-json.log || true
+  tags:
+    - atari.chore
+    - chore
+    - truncate-logs
+
+- name: "Update and upgrade apt packages with a 1 day cache"
+  ansible.builtin.apt:
+    upgrade: yes
+    update_cache: yes
+    cache_valid_time: 86400 #One day
+    autoclean:  true
+    autoremove: true
+  tags:
+    - atari.chore
+    - chore
+    - apt

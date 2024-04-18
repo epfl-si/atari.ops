@@ -4,3 +4,11 @@
       tags:
         - atari.docker
   tags: always
+
+# Always included but never executed without the specific tags (-t chore)
+- include_tasks:
+    file: chore.yml
+    apply:
+      tags:
+        - never
+  tags: always
