@@ -8,10 +8,10 @@ tls:
 http:
   routers:
     dashboard:
-      rule: Host({{ atari_host }}) && (PathPrefix(/api)  PathPrefix(`/dashboard`))
+      rule: "Host(`{{ atari_host_subdomain }}`) && PathPrefix(`/api`, `/dashboard`)"
       service: api@internal
     atari:
-      rule: "Host(`{{ atari_host }}`)  Host({{ atari_host_subdomain }})"
+      rule: "Host(`{{ atari_host }}`) || Host(`{{ atari_host_subdomain }}`)"
       tls: {}
       service: atari
       entrypoints:
