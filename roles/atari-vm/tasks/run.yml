@@ -1,26 +1,4 @@
 ---
-- name: Install Docker
-  apt:
-    name: docker.io
-    state: latest
-    update_cache: true
-
-- name: Install Python Docker
-  apt:
-    name: python3-docker
-    state: latest
-    update_cache: true
-
-- name: Install pip
-  apt:
-    name: python3-pip
-    state: latest
-    update_cache: true
-
-- name: Install docker-compose python package
-  ansible.builtin.pip:
-    name: docker-compose
-
 - name: Ensure that ATARI Git repository is present and up to date
   git:
     repo: 'https://github.com/epfl-si/atari'
@@ -61,15 +39,46 @@
     src: traefik-dynamic.yml
     dest: /srv/traefik/config/
 
-- name: Start ATARI containers (it might take a while)
-  docker_compose:
-    project_src: /srv/atari
+- name: Deploy ATARI containers (it might take a while)
+  community.docker.docker_compose:
     state: present
     build: yes
     recreate: always
     nocache: no
     pull: yes
-    files:
-      - "docker-compose.yml"
-  vars:
-    ansible_python_interpreter: /bin/python3
+    project_name: atari
+    definition:
+      # version: '3'
+      services:
+        meteor:
+          container_name: atari-meteor
+          build:
+            context: /srv/atari
+          ports:
+            - 3000:3000
+          environment:
+            ATARI_ENVIRONMENT: "{{ 'staging' if inventory_mode is test else 'prod' }}"
+            ATARI_DEBUG: 0
+            ATARI_LOGIN_URL: "{{ 'https://tkgi-satosa.epfl.ch' if inventory_mode is test else 'https://satosaaas.epfl.ch' }}"
+        traefik:
+          container_name: atari-traefik
+          image: traefik:v2.10
+          ports:
+            - 80:80
+            - 443:443
+          volumes:
+            - /srv/traefik:/etc/traefik
+
+
+# - name: Start ATARI containers (it might take a while)
+#   docker_compose:
+#     project_src: /srv/atari
+#     state: present
+#     build: yes
+#     recreate: always
+#     nocache: no
+#     pull: yes
+#     files:
+#       - "docker-compose.yml"
+#   vars:
+#     ansible_python_interpreter: /bin/python3

@@ -1,8 +1,15 @@
 - include_tasks:
-    file: docker.yml
+    file: setup.yml
     apply:
       tags:
-        - atari.docker
+        - atari.setup
+  tags: always
+
+- include_tasks:
+    file: run.yml
+    apply:
+      tags:
+        - atari.run
   tags: always
 
 # Always included but never executed without the specific tags (-t chore)

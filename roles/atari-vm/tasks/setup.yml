@@ -1,0 +1,24 @@
+# This file handle things to set up the VM (SSH, docker, motd, etc.)
+---
+- name: Install Docker
+  apt:
+    name: docker.io
+    state: latest
+    update_cache: true
+
+- name: Install Python Docker
+  apt:
+    name: python3-docker
+    state: latest
+    update_cache: true
+
+- name: Install pip
+  apt:
+    name: python3-pip
+    state: latest
+    update_cache: true
+
+- name: Install docker-compose python package
+  ansible.builtin.pip:
+    name: docker-compose
+
