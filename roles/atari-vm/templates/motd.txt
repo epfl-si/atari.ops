@@ -1,0 +1,17 @@
+
+
+               _____________________ __________.___ 
+              /  _  \__    ___/  _  \\______   \   |
+             /  /_\  \|    | /  /_\  \|       _/   |
+            /    |    \    |/    |    \    |   \   |
+            \____|__  /____|\____|__  /____|_  /___|
+                    \/              \/       \/ {{ inventory_mode }}
+    Annuaire Technique d’Attributs pour Responsables Informatiques
+
+ Welcome on {{ atari_host }}, the "{{ inventory_mode }}" for ATARI.
+ This should deploy the ATARI app on https://{{ atari_host_subdomain }}.
+
+ Please contact atari-ops@groupes.epfl.ch for any question on this VM.
+
+
+-
