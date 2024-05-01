@@ -60,6 +60,9 @@
             ATARI_ENVIRONMENT: "{{ 'staging' if inventory_mode is test else 'prod' }}"
             ATARI_DEBUG: 0
             ATARI_LOGIN_URL: "{{ 'https://tkgi-satosa.epfl.ch' if inventory_mode is test else 'https://satosaaas.epfl.ch' }}"
+          volumes:
+            - /srv/atari/maintenance.json:/usr/src/app/maintenance.json
+
         traefik:
           container_name: atari-traefik
           image: traefik:v2.10
