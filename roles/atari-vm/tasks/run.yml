@@ -38,49 +38,45 @@
     src: traefik-dynamic.yml
     dest: /srv/traefik/config/
 
-- name: Deploy ATARI containers (it might take a while)
-  community.docker.docker_compose:
-    state: present
-    build: yes
-    recreate: always
-    nocache: no
-    pull: yes
-    project_name: atari
-    definition:
-      # version: '3'
-      services:
-        meteor:
-          container_name: atari-meteor
-          build:
-            context: /srv/atari
-          ports:
-            - 3000:3000
-          environment:
-            ATARI_ENVIRONMENT: "{{ 'staging' if inventory_mode is test else 'prod' }}"
-            ATARI_DEBUG: 0
-            ATARI_LOGIN_URL: "{{ 'https://tkgi-satosa.epfl.ch' if inventory_mode is test else 'https://satosaaas.epfl.ch' }}"
-          volumes:
-            - /srv/atari/maintenance.json:/usr/src/app/maintenance.json
+- name: Create docker network
+  ansible.builtin.docker_network:
+    name: atari-network
 
-        traefik:
-          container_name: atari-traefik
-          image: traefik:v2.10
-          ports:
-            - 80:80
-            - 443:443
-          volumes:
-            - /srv/traefik:/etc/traefik
+- name: Build ATARI image
+  community.docker.docker_image:
+    name: atari
+    source: build
+    force_source: yes
+    build:
+      path: /srv/atari
 
+- name: Create Docker ATARI
+  ansible.builtin.docker_container:
+    name: atari-meteor
+    image: atari
+    state: started
+    ports:
+      - "3000:3000"
+    networks:
+      - name: atari-network
+        aliases:
+          - meteor
+    env:
+      ATARI_ENVIRONMENT: "{{ 'staging' if inventory_mode is test else 'prod' }}"
+      ATARI_DEBUG: "0"
+      ATARI_LOGIN_URL: "{{ 'https://tkgi-satosa.epfl.ch' if inventory_mode is test else 'https://satosaaas.epfl.ch' }}"
+    volumes:
+      - /srv/atari/maintenance.json:/usr/src/app/maintenance.json
 
-# - name: Start ATARI containers (it might take a while)
-#   docker_compose:
-#     project_src: /srv/atari
-#     state: present
-#     build: yes
-#     recreate: always
-#     nocache: no
-#     pull: yes
-#     files:
-#       - "docker-compose.yml"
-#   vars:
-#     ansible_python_interpreter: /bin/python3
+- name: Create Docker Traefik
+  ansible.builtin.docker_container:
+    name: atari-traefik
+    image: traefik:v2.10
+    state: started
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /srv/traefik:/etc/traefik
+    networks:
+      - name: atari-network
