@@ -6,10 +6,10 @@
     version: "master"
     force: yes
 
-- name: "Copy secrets from keybase ({{ inventory_mode }})"
-  copy:
-    src: "/keybase/team/epfl_atari/settings-{{ inventory_mode }}.json"
-    dest: /srv/atari/settings.json
+- name: "Delete unused file"
+  file:
+    state: absent
+    path: /srv/atari/settings.json
 
 - name: Ensure Traefik repository exists
   file:
@@ -62,9 +62,10 @@
         aliases:
           - meteor
     env:
-      ATARI_ENVIRONMENT: "{{ 'staging' if inventory_mode is test else 'prod' }}"
-      ATARI_DEBUG: "0"
-      ATARI_LOGIN_URL: "{{ 'https://tkgi-satosa.epfl.ch' if inventory_mode is test else 'https://satosaaas.epfl.ch' }}"
+      METEOR_SETTINGS: >-
+        {{ lookup("pipe",
+        "keybase fs read /keybase/team/epfl_atari/settings-{{ inventory_mode }}.json")
+        | from_json | to_json }}
     volumes:
       - /srv/atari/maintenance.json:/usr/src/app/maintenance.json
 
