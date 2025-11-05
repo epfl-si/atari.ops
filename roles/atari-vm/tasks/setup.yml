@@ -18,10 +18,6 @@
     state: latest
     update_cache: true
 
-- name: Install docker-compose python package
-  ansible.builtin.pip:
-    name: docker-compose
-
 - name: Deploy the message of the day
   ansible.builtin.template:
     src: motd.txt
