@@ -9,7 +9,7 @@
     Annuaire Technique d’Attributs pour Responsables Informatiques
 
  Welcome on {{ atari_host }}, the "{{ inventory_mode }}" for ATARI.
- This should deploy the ATARI app on https://{{ atari_host_subdomain }}.
+ This should deploy the ATARI app on https://{{ atari_hostname }}.
 
  Please contact atari-ops@groupes.epfl.ch for any question on this VM.
 
