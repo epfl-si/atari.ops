@@ -62,6 +62,7 @@
         aliases:
           - meteor
     env:
+      ROOT_URL: "https://{{ atari_hostname }}"
       METEOR_SETTINGS: >-
         {{ lookup("pipe",
         "keybase fs read /keybase/team/epfl_atari/settings-{{ inventory_mode }}.json")
