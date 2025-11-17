@@ -5,9 +5,10 @@
     version: "master"
     force: yes
 
-- name: Build ATARI image
+- name: Build and push ATARI image
   community.docker.docker_image:
-    name: atari
+    name: "{{ atari_image_name }}"
+    push: true
     source: build
     force_source: yes
     build:

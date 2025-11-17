@@ -64,7 +64,7 @@
 - name: ATARI Docker container
   ansible.builtin.docker_container:
     name: atari-meteor
-    image: atari
+    image: "{{ atari_image_name }}"
     state: started
     networks:
       - name: atari-network

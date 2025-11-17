@@ -1,2 +1,12 @@
 atari_host: "{{ 'itsidevfsd0031.xaas.epfl.ch' if 'prod' in inventory_file else 'itsidevfsd0024.xaas.epfl.ch' }}"
 atari_hostname: "{{ 'atari.epfl.ch' if 'prod' in inventory_file else 'atari-test.epfl.ch' }}"
+
+atari_image_name: quay-its.epfl.ch/svc0176/atari:latest
+
+_quay_credentials_all: >-
+  {{ lookup("pipe", "keybase fs read /keybase/team/epfl_atari/quay.yml")
+  | from_yaml }}
+
+quay_credentials: >-
+  {{ _quay_credentials_all.quay_pusher if inventory_mode == "test"
+  else _quay_credentials_all.quay_puller }}

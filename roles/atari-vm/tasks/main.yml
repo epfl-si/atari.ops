@@ -5,7 +5,18 @@
         - atari.setup
   tags: always
 
-- include_tasks:
+- name: Log in to Quay
+  tags:
+    - atari.build
+    - atari.run
+  community.docker.docker_login:
+    registry_url: "https://{{ quay_credentials.hostname }}"
+    username: "{{ quay_credentials.username }}"
+    password: "{{ quay_credentials.password }}"
+
+- when: >-
+    inventory_mode == "test"
+  include_tasks:
     file: build.yml
     apply:
       tags:
