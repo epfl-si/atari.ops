@@ -1,13 +1,15 @@
 ---
 
-- name: Ensure Traefik repository exists
+- name: Run-time directories
   file:
     state: directory
     path: "{{ item }}"
+    recurse: true
     mode: '0755'
   with_items:
    - /srv/traefik/ssl/
    - /srv/traefik/config/
+   - /srv/atari/run/mongodb-initdb.d/
 
 - name: Copy Traefik certificates from keybase
   copy:
@@ -31,6 +33,18 @@
   ansible.builtin.docker_network:
     name: atari-network
 
+- name: MongoDB initialization script
+  copy:
+    dest: /srv/atari/run/mongodb-initdb.d/mongo-meteor.js
+    content: |
+      db.createUser({
+        user: 'meteor',
+        pwd: 'meteor',
+        roles: [
+          { role: 'readWrite', db:'meteor'},
+        ]
+      });
+
 - name: MongoDB
   ansible.builtin.docker_container:
     name: atari-mongo
@@ -43,21 +57,23 @@
     env:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: meteor
+    volumes:
+      /srv/atari/run/mongodb-initdb.d/:/docker-entrypoint-initdb.d/
 
 - name: ATARI Docker container
   ansible.builtin.docker_container:
     name: atari-meteor
     image: atari
     state: started
-    ports:
-      - "3000:3000"
     networks:
       - name: atari-network
         aliases:
           - meteor
     env:
+      PORT: "3000"
       ROOT_URL: "https://{{ atari_hostname }}"
-      MONGO_URL: mongodb://root:root@mongodb/
+      MONGO_URL: mongodb://meteor:meteor@mongodb/meteor
       METEOR_SETTINGS: >-
         {{ lookup("pipe",
         "keybase fs read /keybase/team/epfl_atari/settings-{{ inventory_mode }}.json")
