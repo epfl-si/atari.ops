@@ -1,15 +1,4 @@
 ---
-- name: Ensure that ATARI Git repository is present and up to date
-  git:
-    repo: 'https://github.com/epfl-si/atari'
-    dest: /srv/atari
-    version: "master"
-    force: yes
-
-- name: "Delete unused file"
-  file:
-    state: absent
-    path: /srv/atari/settings.json
 
 - name: Ensure Traefik repository exists
   file:
@@ -41,14 +30,6 @@
 - name: Create docker network
   ansible.builtin.docker_network:
     name: atari-network
-
-- name: Build ATARI image
-  community.docker.docker_image:
-    name: atari
-    source: build
-    force_source: yes
-    build:
-      path: /srv/atari
 
 - name: MongoDB
   ansible.builtin.docker_container:

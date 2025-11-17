@@ -1,0 +1,14 @@
+- name: ATARI Git repository
+  git:
+    repo: 'https://github.com/epfl-si/atari'
+    dest: /srv/atari/build
+    version: "master"
+    force: yes
+
+- name: Build ATARI image
+  community.docker.docker_image:
+    name: atari
+    source: build
+    force_source: yes
+    build:
+      path: /srv/atari/build

@@ -6,6 +6,13 @@
   tags: always
 
 - include_tasks:
+    file: build.yml
+    apply:
+      tags:
+        - atari.build
+  tags: always
+
+- include_tasks:
     file: run.yml
     apply:
       tags:
