@@ -39,7 +39,6 @@
   with_items:
     - ponsfrilus
     - domq
-    - azecko
 
 - name: Install useful packages
   become: true
