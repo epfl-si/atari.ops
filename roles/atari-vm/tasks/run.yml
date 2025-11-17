@@ -50,7 +50,22 @@
     build:
       path: /srv/atari
 
-- name: Create Docker ATARI
+- name: MongoDB
+  ansible.builtin.docker_container:
+    name: atari-mongo
+    image: mongo:8.2
+    state: started
+    networks:
+      - name: atari-network
+        aliases:
+          - mongodb
+    env:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    volumes:
+      - /srv/atari/maintenance.json:/usr/src/app/maintenance.json
+
+- name: ATARI Docker container
   ansible.builtin.docker_container:
     name: atari-meteor
     image: atari
@@ -63,6 +78,7 @@
           - meteor
     env:
       ROOT_URL: "https://{{ atari_hostname }}"
+      MONGO_URL: mongodb://root:root@mongodb/
       METEOR_SETTINGS: >-
         {{ lookup("pipe",
         "keybase fs read /keybase/team/epfl_atari/settings-{{ inventory_mode }}.json")
