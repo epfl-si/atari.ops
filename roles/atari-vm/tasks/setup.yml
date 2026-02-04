@@ -43,9 +43,8 @@
 - name: Install useful packages
   become: true
   ansible.builtin.apt:
-    name: "{{ item }}"
     update_cache: true
-  with_items:
+    name:
     - ca-certificates
     - curl
     - git
