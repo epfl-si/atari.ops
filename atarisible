@@ -62,7 +62,7 @@ mode=ansible-playbook
 while [ "$#" -gt 0 ]; do
     case "$1" in
         --prod)
-            inventory_mode="prod"
+            inventory_mode="test+prod"
             shift ;;
         -m) mode=ansible
             ansible_args+=("-m")
