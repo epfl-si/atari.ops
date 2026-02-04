@@ -1,5 +1,5 @@
 all:
   hosts:
     itsidevfsd0031.xaas.epfl.ch:
-      inventory_mode: prod
+      inventory_deployment_stage: prod
       ansible_user: root

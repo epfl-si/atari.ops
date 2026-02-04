@@ -15,7 +15,7 @@
     password: "{{ quay_credentials.password }}"
 
 - when: >-
-    inventory_mode == "test"
+    inventory_deployment_stage == "test"
   include_tasks:
     file: build.yml
     apply:

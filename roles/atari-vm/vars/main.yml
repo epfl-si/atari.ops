@@ -8,5 +8,5 @@ _quay_credentials_all: >-
   | from_yaml }}
 
 quay_credentials: >-
-  {{ _quay_credentials_all.quay_pusher if inventory_mode == "test"
+  {{ _quay_credentials_all.quay_pusher if inventory_deployment_stage == "test"
   else _quay_credentials_all.quay_puller }}

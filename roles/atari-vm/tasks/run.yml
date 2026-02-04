@@ -76,7 +76,7 @@
       MONGO_URL: mongodb://meteor:meteor@mongodb/meteor
       METEOR_SETTINGS: >-
         {{ lookup("pipe",
-        "keybase fs read /keybase/team/epfl_atari/settings-{{ inventory_mode }}.json")
+        "keybase fs read /keybase/team/epfl_atari/settings-{{ inventory_deployment_stage }}.json")
         | from_json | to_json }}
 
 - name: Create Docker Traefik
