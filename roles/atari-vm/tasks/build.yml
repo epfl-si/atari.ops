@@ -6,6 +6,7 @@
     force: yes
 
 - name: Build and push ATARI image
+  register: _atari_image
   community.docker.docker_image:
     name: "{{ atari_image_name }}"
     push: true

@@ -62,10 +62,16 @@
       /srv/atari/run/mongodb-initdb.d/:/docker-entrypoint-initdb.d/
 
 - name: ATARI Docker container
-  ansible.builtin.docker_container:
+  community.docker.docker_container:
     name: atari-meteor
     image: "{{ atari_image_name }}"
     state: started
+    restart: >-
+      {{
+      ( _atari_image | default({}) is changed )
+      or
+      ( atari_restart is defined )
+      }}
     networks:
       - name: atari-network
         aliases:
