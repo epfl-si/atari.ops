@@ -39,6 +39,8 @@
   with_items:
     - ponsfrilus
     - domq
+    - dwesh163
+    - jdelasoie
 
 - name: Install useful packages
   become: true
